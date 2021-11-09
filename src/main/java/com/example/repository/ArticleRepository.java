@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.example.domain.Article;
 
 @Repository
-public class ArticleRipository {
+public class ArticleRepository {
 
 	private static final RowMapper<Article> ARTICLE_ROW_MAPPER = new BeanPropertyRowMapper<>(Article.class);
 	
@@ -22,7 +22,7 @@ public class ArticleRipository {
 	private NamedParameterJdbcTemplate template;
 	
 	public List<Article> findAll(){
-		String sql = "SELECT * FROM articles;";
+		String sql = "SELECT * FROM articles ORDER BY id DESC;";
 		
 		List<Article> articleList = template.query(sql, ARTICLE_ROW_MAPPER);
 		
