@@ -13,10 +13,10 @@
 				<form th:action="@{/article/insert}" method="post" th:object="${articleForm}">
 						<div th:errors="*{name}" style="color:red">エラー！</div>
 						<label for="nameField">投稿者名：</label>
-						<input class="form-control w-25" id="nameField" type="text" name="name"><br>
+						<input class="form-control w-25" id="nameField" type="text" name="name" th:field="*{name}"><br>
 						<div th:errors="*{content}" style="color:red">エラー！</div>
 						<label for="contentField">投稿内容：</label>
-						<textarea class="form-control" name="content" cols="20" rows="5"></textarea>
+						<textarea class="form-control" name="content" cols="20" rows="5" th:field="*{content}"></textarea>
 						<br>
 						<button  class="btn btn-success">記事投稿</button>
 				</form>
@@ -49,20 +49,27 @@
 				</div>
 			</div>
 		</div>
-		
-			<form th:action="@{/article/insert-comment}" method="post" th:object="${commentForm}">
-				<div th:errors="*{name}" style="color:red">エラー！</div>
-				<div th:errors="*{name}" style="color:red">エラー！</div>
-				<label for="nameField">名前：</label><br>
-				<input class="form-control w-25" id="nameField" type="text" name="name" th:field="*{name}"><br>
-				<div th:errors="*{content}" style="color:red">エラー！</div>
-				<label for="contentField">コメント：</label><br>
-				<textarea class="form-control w-75" name="content" cols="20" rows="5"></textarea>
+	
+			<form th:action="@{/article/insert-comment}" method="post" th:object="${commentForm}" th:value="${list.id}">
 				
 				<input type="hidden" name="articleId" th:value="${list.id}">
+				<div th:if="${id == list.id}" th:errors="*{name}" style="color:red">エラー！</div>
+				<label for="nameField">名前：</label><br>
+				
+				<input class="form-control w-25" id="nameField" type="text" name="name" th:if="${id == list.id}" th:value="*{name}"><br>
+				
+				<input class="form-control w-25" id="nameField" type="text" name="name" th:unless="${id == list.id}"><br>
+				
+				
+				
+				<div th:if="${id == list.id}" th:errors="*{content}" style="color:red">エラー！</div>
+				<label for="contentField">コメント：</label><br> 
+				<textarea th:if="${id == list.id}" th:field="*{content}" class="form-control w-75" name="content" cols="20" rows="5"></textarea>
+				<textarea th:unless="${id == list.id}" class="form-control w-75" name="content" cols="20" rows="5"></textarea>
 				<br>
 				<button class="btn btn-success">コメント投稿</button>
 			</form>
+		
 		<hr>
 	</div>
 	</div>

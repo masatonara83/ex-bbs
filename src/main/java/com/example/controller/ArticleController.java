@@ -85,6 +85,8 @@ public class ArticleController {
 			BindingResult result, Model model) {
 		
 		if(result.hasErrors()) {
+			Integer id = commentForm.getIntArticleId();
+			model.addAttribute("id", id);
 			return findByAllTable(model);
 		}
 		
@@ -100,7 +102,8 @@ public class ArticleController {
 	
 	@RequestMapping("delete")
 	public String deleteArticle(Integer id) {
-		commentRepository.deleteByArticleId(id);
+		//sqlで既に紐づいているため
+//		commentRepository.deleteByArticleId(id);
 		repository.deleteById(id);
 		return "redirect:/article/all";
 		
