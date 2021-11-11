@@ -7,6 +7,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,12 +43,12 @@ public class ArticleController {
 	public String index(Model model) {
 		List<Article> articleList = repository.findAll();
 		
-		List<Comment> commentList;
+		
 		for(int i = 0; i < articleList.size(); i++) {
 			Article article = articleList.get(i);
-			commentList = commentRepository.findByArticle(article.getId());
+			List<Comment> commentList = commentRepository.findByArticle(article.getId());
 			article.setCommentList(commentList);
-			articleList.set(i, article);
+			//articleList.set(i, article);
 		}
 		
 		model.addAttribute("articleList", articleList);
@@ -54,8 +56,21 @@ public class ArticleController {
 		return "input-article";
 	}
 	
+	@RequestMapping("/all")
+	public String findByAllTable(Model model) {
+		List<Article> articleList = repository.findByAllTable();
+		
+		model.addAttribute("articleList", articleList);
+		
+		return "input-article";
+	}
+	
 	@RequestMapping("/insert")
-	public String insertArticle(ArticleForm form) {
+	public String insertArticle(@Validated ArticleForm form,
+			BindingResult result, Model model) {
+		if(result.hasErrors()) {
+			return findByAllTable(model);
+		}
 		
 		Article article = new Article();
 		
@@ -66,15 +81,19 @@ public class ArticleController {
 	}
 	
 	@RequestMapping("insert-comment")
-	public String insert(CommentForm form) {
+	public String insert(@Validated CommentForm commentForm,
+			BindingResult result, Model model) {
+		
+		if(result.hasErrors()) {
+			return findByAllTable(model);
+		}
+		
 		Comment comment = new Comment();
-		System.out.println(form);
-		BeanUtils.copyProperties(form, comment);
-		comment.setArticleId(form.getIntArticleId());
-		System.out.println(comment);
+		BeanUtils.copyProperties(commentForm, comment);
+		comment.setArticleId(commentForm.getIntArticleId());
 		commentRepository.insert(comment);
 		
-		return "redirect:/article/index";
+		return "redirect:/article/all";
 		
 		
 	}
@@ -83,7 +102,7 @@ public class ArticleController {
 	public String deleteArticle(Integer id) {
 		commentRepository.deleteByArticleId(id);
 		repository.deleteById(id);
-		return "redirect:/article/index";
+		return "redirect:/article/all";
 		
 	}
 }

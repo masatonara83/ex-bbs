@@ -21,6 +21,7 @@ public class CommentRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 	
+	
 	public List<Comment> findByArticle(Integer articleId){
 		String sql = "SELECT * FROM comments WHERE article_id = :articleId ORDER BY id DESC;";
 		

@@ -1,13 +1,15 @@
 package com.example.form;
 
+import javax.validation.constraints.NotBlank;
 
 public class ArticleForm {
 
 	// 名前
+	@NotBlank(message="入力してください")
 	private String name;
 	//記事の内容
+	@NotBlank(message="入力してください")
 	private String content;
-	
 	
 	public String getName() {
 		return name;

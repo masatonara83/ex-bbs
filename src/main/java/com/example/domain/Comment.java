@@ -1,11 +1,13 @@
 package com.example.domain;
 
-public class Comment {
+
+public class Comment extends Article {
 
 	private Integer id;
 	private String name;
 	private String content;
 	private Integer articleId;
+	
 	
 	public Integer getId() {
 		return id;

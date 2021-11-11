@@ -1,9 +1,15 @@
 package com.example.form;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
 public class CommentForm {
 
+	@Valid
 	private String articleId;
+	@NotBlank(message="入力してください")
 	private String name;
+	@NotBlank(message="入力してください")
 	private String content;
 	
 	public int getIntArticleId() {

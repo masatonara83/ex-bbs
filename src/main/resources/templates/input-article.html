@@ -3,43 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <title>タイトル</title>
+<link th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css}" rel="stylesheet" >
 </head>
 <body>
-	<form th:action="@{/article/insert}" method="post" th:object="${articleForm}">
-		<label for="nameField">投稿者名：</label>
-		<input id="nameField" type="text" name="name"><br>
-		<label for="contentField">投稿内容：</label>
-		<textarea name="content" cols="20" rows="5"></textarea>
-		<br>
-		<button>記事投稿</button>
-	</form>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+			<h1>掲示板</h1>
+				<form th:action="@{/article/insert}" method="post" th:object="${articleForm}">
+						<div th:errors="*{name}" style="color:red">エラー！</div>
+						<label for="nameField">投稿者名：</label>
+						<input class="form-control w-25" id="nameField" type="text" name="name"><br>
+						<div th:errors="*{content}" style="color:red">エラー！</div>
+						<label for="contentField">投稿内容：</label>
+						<textarea class="form-control" name="content" cols="20" rows="5"></textarea>
+						<br>
+						<button  class="btn btn-success">記事投稿</button>
+				</form>
+			</div>
+	</div>
 	<br>
 	<hr>
-	<div th:each="list : ${articleList}">
-		投稿者名：<span th:text="${list.name}"></span>
-		<br>
-		投稿内容：<br>
-		<pre th:text="${list.content}"></pre><br>
-		<form th:action=@{/article/delete} method="post">
-			<input type="hidden" name="id" th:value="${list.id}">
-			<button>記事削除</button>
-		</form>
+	
+	<div th:each="list,status : ${articleList}">
+		<div class="card shadow">
+			<h4 class="card-title text-danger">投稿者名</h4>
+			<span class="p-3" th:text="${list.name}"></span>
+			<br>
+			<h4 class="card-title text-danger">投稿内容</h4>
+			<pre class="p-3" th:text="${list.content}"></pre>
+			<form th:action=@{/article/delete} method="post">
+				<input type="hidden" name="id" th:value="${list.id}">
+				<button class="btn btn-danger">記事削除</button>
+			</form>
+		</div>
+	
 		<br>
 		<div th:each="comment : ${list.commentList}">
-			コメント者名：<span th:text="${comment.name}"></span><br>
-			コメント内容：<br>
-			<pre th:text="${comment.content}"></pre><br>
+			<div class="d-flex justify-content-around">
+				<div class="card w-100">
+					<h4>コメント者名</h4>
+					<span class="p-3" th:text="${comment.name}"></span><br>
+					<h4>コメント内容</h4>
+					<pre class="p-3" th:text="${comment.content}"></pre><br>
+				</div>
+			</div>
 		</div>
-		<form th:action="@{/article/insert-comment}" method="post" th:object="${commentForm}">
-			<label for="nameField">名前：</label><br>
-			<input id="nameField" type="text" name="name"><br>
-			<label for="contentField">コメント：</label><br>
-			<textarea name="content" cols="20" rows="5"></textarea>
-			<input type="hidden" name="articleId" th:value="${list.id}">
-			<br>
-			<button>コメント投稿</button>
-		</form>
+		
+			<form th:action="@{/article/insert-comment}" method="post" th:object="${commentForm}">
+				<div th:errors="*{name}" style="color:red">エラー！</div>
+				<div th:errors="*{name}" style="color:red">エラー！</div>
+				<label for="nameField">名前：</label><br>
+				<input class="form-control w-25" id="nameField" type="text" name="name" th:field="*{name}"><br>
+				<div th:errors="*{content}" style="color:red">エラー！</div>
+				<label for="contentField">コメント：</label><br>
+				<textarea class="form-control w-75" name="content" cols="20" rows="5"></textarea>
+				
+				<input type="hidden" name="articleId" th:value="${list.id}">
+				<br>
+				<button class="btn btn-success">コメント投稿</button>
+			</form>
 		<hr>
+	</div>
 	</div>
 </body>
 </html>
