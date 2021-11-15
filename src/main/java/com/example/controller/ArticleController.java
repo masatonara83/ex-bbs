@@ -68,6 +68,7 @@ public class ArticleController {
 	@RequestMapping("/insert")
 	public String insertArticle(@Validated ArticleForm form,
 			BindingResult result, Model model) {
+		
 		if(result.hasErrors()) {
 			return findByAllTable(model);
 		}
